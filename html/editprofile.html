@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crochet market</title>
+    <link rel="stylesheet" href="css/editprofilestyle.css">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body onload="runEdit()">
+    <nav> 
+        <div id="nav1">
+        <a>Shop</a>
+        <a>Create</a>
+        <a>About us</a>
+        </div>
+        <div class="icons">
+        <a href="./index2.html"><img src="./pics/house-solid.svg" id="icon"></a>
+        <a href="./cart.html"><img src="./pics/cart-shopping-solid.svg" id="icon"></a>
+        <a href="./Profilepage.html"><img src="./pics/user-solid.svg" id="icon"></a>
+        </div>
+    </nav>
+    <div class="profile-edit-box">
+        <div id="container">
+            <h2>Editar Perfil</h2>
+        <div class="profile-pic-container">
+            <div id="imagen"></div>
+            <button id="upload-photo">Subir nueva foto</button>
+        </div>
+        <form>
+            <div class="input-group">
+                <p class="input-text">Nickname</p>
+                <input type="text" class="inputs" id="new-name">
+            </div>
+            <div class="input-group">
+                <label for="password" class="input-text">Contraseña</label>
+                <input type="password" class="inputs" id="new-pass">
+            </div>
+            <button type="submit" id="save-changes" onclick="editProfile()">Guardar cambios</button>
+        </form>
+        </div>
+    </div>
+<script src="./js/edit.js"></script>
+</body>
+</html>
