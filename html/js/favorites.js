@@ -1,34 +1,76 @@
 
-favorites = []
-
-
-document.addEventListener('click', (event) => {
-    if (event.target.matches('.heart')) {
-        const pos = event.target.getAttribute('data-pos');
-        toggleFavorite(parseInt(pos));
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    updateHeartIcons();
+    document.addEventListener('click', (event) => {
+        if (event.target.matches('.heart')) {
+            const prodId = event.target.getAttribute('data-id');
+            toggleFavorite(parseInt(prodId));  
+        }
+    });
 });
 
-function toggleFavorite(pos) {
-    const index = favorites.indexOf(pos);
+function toggleFavorite(productId) {
+    let userName = localStorage.getItem('currentUser');
+    if (userName) {
+        let userData = localStorage.getItem(userName);
+        if (userData) {
+            let parsedUserData = JSON.parse(userData);
+            let favs = parsedUserData.favorites || [];
+            
+            const index = favs.indexOf(productId);  
+            if (index !== -1) {
+                favs.splice(index, 1);  
+            } else {
+                favs.push(productId);  
+            }
 
-    if (index === -1) {
-        // si el producto no esta en fav, se añade.
-        favorites.push(pos);
-        console.log(`Added product at position ${pos} to favorites.`);
-    } else {
-        // si ya está en fav se quita 
-        favorites.splice(index, 1);
-        console.log(`Removed product at position ${pos} from favorites.`);
+            parsedUserData.favorites = favs;
+            localStorage.setItem(userName, JSON.stringify(parsedUserData));
+
+            updateHeartIcon(productId);
+            renderFavorites(favs)
+        }
     }
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-    updateHeartIcon(pos);
 }
 
-function updateHeartIcon(pos) {
-    const heartImages = document.querySelectorAll('.heart');
-    heartImages.forEach((heartImage) => {
-        const heartPos = heartImage.getAttribute('data-pos');
-        heartImage.src = favorites.includes(parseInt(heartPos)) ? './pics/heart-solid.svg' : './pics/heart-regular.svg';
-    });
-} //Actualiza el icono del corazon dependiendo del estado de este.
+function updateHeartIcon(productId) {
+    const heartIcon = document.querySelector(`.heart[data-id="${productId}"]`);
+    if (heartIcon) {
+        const userName = localStorage.getItem('currentUser');
+        if (userName) {
+            const userData = localStorage.getItem(userName);
+            if (userData) {
+                const parsedUserData = JSON.parse(userData);
+                const favs = parsedUserData.favorites || [];
+
+               
+                if (favs.includes(productId)) {
+                    heartIcon.src = './pics/heart-solid.svg';  
+                } else {
+                    heartIcon.src = './pics/heart-regular.svg';  
+                }
+            }
+        }
+    }
+}
+
+function updateHeartIcons() {
+    const userName = localStorage.getItem('currentUser');
+    if (userName) {
+        const userData = localStorage.getItem(userName);
+        if (userData) {
+            const parsedUserData = JSON.parse(userData);
+            const favs = parsedUserData.favorites || [];
+
+            const heartIcons = document.querySelectorAll('.heart');
+            heartIcons.forEach(heartIcon => {
+                const productId = heartIcon.getAttribute('data-id'); 
+                if (favs.includes(Number(productId))) {
+                    heartIcon.src = './pics/heart-solid.svg'; 
+                } else {
+                    heartIcon.src = './pics/heart-regular.svg'; 
+                }
+            });
+        }
+    }
+}

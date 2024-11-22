@@ -21,7 +21,7 @@ prodCard(pos) {
                         <h2 onclick="openProduct(${pos})">${this.name}</h2>
                         <div id="row-info">
                             <p>$ ${this.price}</p>
-                            <img src="./pics/heart-regular.svg" class="heart" data-pos="${pos}">
+                            <img src="./pics/heart-regular.svg" class="heart" data-id="${this.id}" id="heart">
                         </div>
                     </div>
                 </div> `

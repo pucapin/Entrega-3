@@ -1,5 +1,4 @@
  
-const userName = localStorage.getItem('currentUser');
 const displayName = document.getElementById('userNick');
 const displayUser = document.getElementById('userName');
 
@@ -15,6 +14,16 @@ async function getProducts() {
 
     parseProducts(data)
 
+    const userName = localStorage.getItem('currentUser');
+    if (userName) {
+        const userData = localStorage.getItem(userName);
+        if (userData) {
+            const parsedUserData = JSON.parse(userData);
+            const favs = parsedUserData.favorites || [];
+            console.log(favs)
+            renderFavorites(favs)
+        }
+    }
 }
 
 function parseProducts(data) {
@@ -28,8 +37,8 @@ function parseProducts(data) {
 
 
 if (userName) {
-    
-    const userData = localStorage.getItem(userName); 
+    let userName = localStorage.getItem('currentUser');
+    let userData = localStorage.getItem(userName); 
     if (userData) {
         const parsedUserData = JSON.parse(userData);
         displayName.textContent = parsedUserData.user;
@@ -38,43 +47,42 @@ if (userName) {
     console.log("No hay datos de usuario en localStorage");
 }}
 
-document.addEventListener('DOMContentLoaded', () => {
-    const storedFavorites = localStorage.getItem('favorites');
-    if (storedFavorites) {
-        favorites = JSON.parse(storedFavorites);
-        console.log(favorites); // Now you can use the favorites array
-    }
-    parseProducts()
-    renderFavorites()
-});
-
-function renderFavorites() {
+function renderFavorites(favs) {
     let contain = document.getElementById("favoritos");
-    contain.innerHTML = ""; // Clear existing content
-
-    // Iterate over the favorites array
-    for (let i = 0; i < favorites.length; i++) {
-        let pos = favorites[i]; // Get the position of the favorite
-        let product = products[pos]; // Use the position to get the actual product
-        contain.innerHTML += product.prodCard(pos); // Append the product card
+    contain.innerHTML = ""; 
+    for (let i = 0; i < products.length; i++) {
+        const product = products[i];
+        if (favs.includes(product.id)) {  
+            contain.innerHTML += product.prodCard(i); 
+        }
     }
-    updateHeartIcon()
+    if (favs.length === 0) {
+        contain.innerHTML = `<button id="favbutt">No favorites yet</button>`
+        return;
+    }
+
+    updateHeartIcons(favs);
 }
 
-function updateHeartIcon(pos) {
-    const heartImages = document.querySelectorAll('.heart'); // Use class selector
-    heartImages.forEach((heartImage) => {
-        const heartPos = heartImage.getAttribute('data-pos');
-        heartImage.src = favorites.includes(parseInt(heartPos)) ? './pics/heart-solid.svg' : './pics/heart-regular.svg';
+function updateHeartIcons(favs) {
+    const heartIcons = document.querySelectorAll('.heart');
+    heartIcons.forEach(heartIcon => {
+        const productId = heartIcon.getAttribute('data-id'); 
+        if (favs.includes(Number(productId))) {
+            heartIcon.src = './pics/heart-solid.svg'; 
+        } else {
+            heartIcon.src = './pics/heart-regular.svg'; 
+        }
     });
 }
 
+
+
 function openProduct(pos) {
     let openProduct = products[pos]
-    window.location = "./product.html?name=" + encodeURIComponent(openProduct.name);
-
+    window.location = "./product.html?id=" + encodeURIComponent(openProduct.id);
     
-}
+} 
 
 document.getElementById('down').addEventListener('click', logoutUser);
 function logoutUser() {
@@ -82,4 +90,4 @@ function logoutUser() {
     window.location.href = './login.html';
 }
 
-
+getProducts();

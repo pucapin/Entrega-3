@@ -16,7 +16,7 @@ function signUp() {
                         email: email,
                         password: pass,
                         user: user,
-                        favs: [],
+                        favorites: [],
                     };
                     localStorage.setItem(userData.user, JSON.stringify(userData));
                     localStorage.setItem('currentUser', userData.user);
